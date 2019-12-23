@@ -3,8 +3,9 @@ from sklearn.ensemble import RandomForestRegressor
 from functions import predict_each_row
 
 typ = 'pps'
+target = 'cpu'
 model = 'rfr'
-x_col = ['packetsize', 'cpu']
+x_col = ['packetsize', typ]
 
 results_path = './results/191223_test/'
 data_path = './data/multivariate_' + typ +'.xlsx'
@@ -14,7 +15,7 @@ pred_path = results_path + 'pred/'+ typ + '/' + model + '_' + typ + '_'
 data = pd.read_excel(data_path, header=0, index_col=0)
 
 x = data[x_col].values
-y = data[typ].values
+y = data[target].values
 
 regr = RandomForestRegressor(max_depth=2, random_state=0)
 
