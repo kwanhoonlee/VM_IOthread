@@ -50,3 +50,27 @@ def predict_each_row(model, x, y, row_count, plt_path, pred_path):
         make_plot(yi, yhat, plt_path + fname + '.png')
 
     return results
+
+def reshape_more_data(raw, ps, path):
+    packetsize = []
+    cpu_usage = []
+    for i in range(1, 11):
+        for j in range(10):
+            packetsize.append(ps)
+            cpu_usage.append(i*10)
+
+    packetsize = pd.DataFrame(packetsize)
+    cpu_usage = pd.DataFrame(cpu_usage)
+
+    init = pd.DataFrame(raw.iloc[:, 0:2].values)
+    for i in range(1, len(raw)):
+        next = pd.DataFrame(raw.iloc[:, i*2:(i+1)*2].values)
+        init = pd.concat([init, next], axis=0)
+
+    init = init.reset_index(drop=True)
+    init = pd.concat([init, packetsize, cpu_usage, ], axis=1)
+    init.columns = ['bandwidth', 'pps', 'packetsize', 'cpu']
+
+    init.to_csv(path + str(ps) + '.csv')
+    return init
+
