@@ -1,9 +1,10 @@
 import pandas as pd
 from sklearn.svm import SVR
-from functions import learn_predict, make_plot, save_prediction
+from sklearn.model_selection import cross_val_score, KFold
+from functions import learn_predict, make_plot, save_prediction, split_train_test, learn_predict_using_kfold
 
-ps = '64'
-typ = 'bandwidth'
+ps = '256'
+typ = 'pps'
 target = 'cpu'
 model = 'svr'
 x_col = ['packetsize', typ]
@@ -23,3 +24,7 @@ regr = SVR(kernel='rbf', C=100, gamma='auto', epsilon=.1)
 yhat = learn_predict(regr, x, y)
 make_plot(y, yhat, plt_path + ps + '.png')
 save_prediction(y, yhat, pred_path + ps + '.csv')
+
+learn_predict_using_kfold(regr, x, y, 10)
+
+trainX = x

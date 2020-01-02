@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from functions import learn_predict, make_plot, save_prediction
 
-ps = '1024'
+ps = '256'
 typ = 'pps'
 target = 'cpu'
 model = 'lr'
@@ -23,3 +23,4 @@ regr = LinearRegression()
 yhat = learn_predict(regr, x, y)
 make_plot(y, yhat, plt_path + ps + '.png')
 save_prediction(y, yhat, pred_path + ps + '.csv')
+
