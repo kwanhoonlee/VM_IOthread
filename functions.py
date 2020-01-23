@@ -6,10 +6,11 @@ from sklearn.model_selection import KFold
 from sklearn.preprocessing import MinMaxScaler
 
 class func :
-    def __init__(self, x,y):
+
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.Y = y.reshape(-1,1)
+        self.Y = y.reshape(-1, 1)
         self.scaler_x, self.scaler_y = self.make_scalers()
         self.transformed_x, self.transformed_y = self.transform()
 
@@ -29,12 +30,13 @@ class func :
         plt.clf()
         plt.close()
 
-    def save_prediction(self,  y, yhat, save_path, x=None):
+    def save_prediction(self,  y, yhat, save_path, x_col, x=None, ):
         rmse = self.calculate_rmse(y, yhat)
         df_result = pd.DataFrame([y, yhat]).T
         df_result.columns = ['y', 'yhat']
+
         if x is not None :
-            df_x = pd.DataFrame(x, columns=['packetsize', 'pps', 'bandwidth'])
+            df_x = pd.DataFrame(x, columns=x_col)
             df_result = pd.concat([df_result, df_x], axis=1)
 
         else :
@@ -51,6 +53,7 @@ class func :
 
         return yhat
 
+    # Deprecated function
     def predict_each_row(self, model, x, y, row_count, plt_path, pred_path):
         init_model = model
         results = []
@@ -68,9 +71,11 @@ class func :
 
         return results
 
+    # Deprecated function
     def reshape_more_data(self, raw, ps, path):
         packetsize = []
         cpu_usage = []
+
         for i in range(1, 11):
             for j in range(10):
                 packetsize.append(ps)
@@ -109,9 +114,7 @@ class func :
         Y = self.transformed_y.reshape(-1)
         train_X, test_X, train_Y, test_Y = self.split_train_test(self.transformed_x, Y, splitCount)
 
-        yhat_list = []
-        y_list = []
-        x_list = []
+        yhat_list, y_list, x_list = [], [], []
 
         for index in range(splitCount):
             init_model.fit(train_X[index], train_Y[index])
@@ -120,7 +123,6 @@ class func :
             yhat_list.append(yhat), y_list.append(test_Y[index]), x_list.append(test_X[index])
 
         return x_list, y_list, yhat_list
-
 
     def make_scalers(self):
         scaler_x, scaler_y = MinMaxScaler(), MinMaxScaler()
@@ -144,3 +146,4 @@ class func :
         inverted_y, inverted_yhat = inverted_y.reshape(-1), inverted_yhat.reshape(-1)
 
         return inverted_x, inverted_y, inverted_yhat
+
